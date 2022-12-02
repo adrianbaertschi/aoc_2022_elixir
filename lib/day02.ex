@@ -7,25 +7,28 @@ defmodule Day02 do
   @paper "B"
   @scissors "C"
 
+  @p_rock 1
+  @p_paper 2
+  @p_scissors 3
+
   # A, X: Rock      1
   # B, Y: Paper     2
   # C, Z: Scissors  3
   def totalScorePart1(input) do
-    String.split(input, "\r\n", trim: true)
-    |> Enum.map(fn b -> String.split(b) end)
-    |> Enum.map(fn r -> score1(r) end)
+    parse(input)
+    |> Enum.map(&score1/1)
     |> Enum.sum()
   end
 
-  def score1(round) do
+  defp score1(round) do
     case Enum.at(round, 1) do
-      "X" -> 1 + rock(Enum.at(round, 0))
-      "Y" -> 2 + paper(Enum.at(round, 0))
-      "Z" -> 3 + sci(Enum.at(round, 0))
+      "X" -> @p_rock + rock(Enum.at(round, 0))
+      "Y" -> @p_paper + paper(Enum.at(round, 0))
+      "Z" -> @p_scissors + sci(Enum.at(round, 0))
     end
   end
 
-  def rock(opp) do
+  defp rock(opp) do
     case opp do
       @rock -> @draw
       @paper -> @lose
@@ -33,7 +36,7 @@ defmodule Day02 do
     end
   end
 
-  def paper(opp) do
+  defp paper(opp) do
     case opp do
       @rock -> @win
       @paper -> @draw
@@ -41,7 +44,7 @@ defmodule Day02 do
     end
   end
 
-  def sci(opp) do
+  defp sci(opp) do
     case opp do
       @rock -> @lose
       @paper -> @win
@@ -53,13 +56,12 @@ defmodule Day02 do
   # Y: win  6
   # Z: draw 3
   def totalScorePart2(input) do
-    String.split(input, "\r\n", trim: true)
-    |> Enum.map(fn b -> String.split(b) end)
-    |> Enum.map(fn r -> score2(r) end)
+    parse(input)
+    |> Enum.map(&score2/1)
     |> Enum.sum()
   end
 
-  def score2(round) do
+  defp score2(round) do
     case Enum.at(round, 1) do
       "X" -> @lose + lose(Enum.at(round, 0))
       "Y" -> @draw + draw(Enum.at(round, 0))
@@ -67,27 +69,32 @@ defmodule Day02 do
     end
   end
 
-  def win(opp) do
+  defp win(opp) do
     case opp do
-      @rock -> 2
-      @paper -> 3
-      @scissors -> 1
+      @rock -> @p_paper
+      @paper -> @p_scissors
+      @scissors -> @p_rock
     end
   end
 
-  def lose(opp) do
+  defp lose(opp) do
     case opp do
-      @rock -> 3
-      @paper -> 1
-      @scissors -> 2
+      @rock -> @p_scissors
+      @paper -> @p_rock
+      @scissors -> @p_paper
     end
   end
 
-  def draw(opp) do
+  defp draw(opp) do
     case opp do
-      @rock -> 1
-      @paper -> 2
-      @scissors -> 3
+      @rock -> @p_rock
+      @paper -> @p_paper
+      @scissors -> @p_scissors
     end
+  end
+
+  defp parse(input) do
+    String.split(input, "\r\n", trim: true)
+    |> Enum.map(&String.split/1)
   end
 end
