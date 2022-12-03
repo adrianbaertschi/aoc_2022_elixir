@@ -24,10 +24,9 @@ defmodule Day03 do
   defp score(c) do
     <<i::utf8>> = c
 
-    if String.upcase(c) == c do
-      i - 38
-    else
-      i - 96
+    cond do
+      String.upcase(c) == c -> i - 38
+      String.downcase(c) == c -> i - 96
     end
   end
 
