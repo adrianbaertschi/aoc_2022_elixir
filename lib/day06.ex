@@ -8,12 +8,10 @@ defmodule Day06 do
   end
 
   defp find_unique_seq_idx(input, length) do
-    startIndex =
-      0..(String.length(input) - length)
-      |> Enum.map(fn i -> String.slice(input, i, length) end)
-      |> Enum.find_index(&all_different?/1)
-
-    startIndex + length
+    0..(String.length(input) - length)
+    |> Enum.map(fn i -> String.slice(input, i, length) end)
+    |> Enum.find_index(&all_different?/1)
+    |> then(&(&1 + length))
   end
 
   defp all_different?(seq) do
