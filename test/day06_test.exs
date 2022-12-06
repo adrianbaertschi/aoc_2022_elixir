@@ -22,9 +22,8 @@ defmodule Day06Test do
     assert Day06.part_two("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw") == 26
   end
 
-
-    test "Part 2 - Challenge" do
-      input = File.read!("./test/input/day06_input.txt")
-      assert Day06.part_two(input) == 2803
-    end
+  test "Part 2 - Challenge" do
+    input = File.read!("./test/input/day06_input.txt")
+    assert Day06.part_two(input) == 2803
+  end
 end
