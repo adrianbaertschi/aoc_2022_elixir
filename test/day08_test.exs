@@ -11,14 +11,13 @@ defmodule Day08Test do
     assert Day08.part_one(input) == 1829
   end
 
-  #
-  #  test "Part 2 - Sample Input" do
-  #    input = File.read!("./test/input/day08_sample.txt")
-  #    assert Day08.part_two(input) == 24_933_642
-  #  end
-  #
-  #  test "Part 2 - Challenge" do
-  #    input = File.read!("./test/input/day08_input.txt")
-  #    assert Day08.part_two(input) == 6_999_588
-  #  end
+  test "Part 2 - Sample Input" do
+    input = File.read!("./test/input/day08_sample.txt")
+    assert Day08.part_two(input) == 8
+  end
+
+  test "Part 2 - Challenge" do
+    input = File.read!("./test/input/day08_input.txt")
+    assert Day08.part_two(input) == 291_840
+  end
 end
