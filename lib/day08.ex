@@ -5,8 +5,7 @@ defmodule Day08 do
 
     for x <- Range.new(0, l) do
       for y <- Range.new(0, l) do
-        e = Enum.at(array, x) |> Enum.at(y)
-        visible?(e, x, y, l, array)
+        visible?(x, y, l, array)
       end
     end
     |> List.flatten()
@@ -19,7 +18,6 @@ defmodule Day08 do
 
     for x <- Range.new(0, l) do
       for y <- Range.new(0, l) do
-        e = Enum.at(array, x) |> Enum.at(y)
         viewing_dist(x, y, l, array)
       end
     end
@@ -28,17 +26,15 @@ defmodule Day08 do
   end
 
   defp viewing_dist(x, y, l, array) do
-    e = Enum.at(array, x) |> Enum.at(y)
-    tu = neighbours(0, x, y, l, array)
-    calc_dist(tu, e)
+    parts = neighbours_two(x, y, l, array)
+    e = array |> Enum.at(x) |> Enum.at(y)
+    calc_dist(parts, e)
   end
 
-  defp calc_dist({up, down, right, left}, e) do
-    u = dist(up, e)
-    d = dist(down, e)
-    r = dist(right, e)
-    l = dist(left, e)
-    u * d * r * l
+  defp calc_dist(parts, e) do
+    parts
+    |> Enum.map(fn el -> dist(el, e) end)
+    |> Enum.product()
   end
 
   defp dist(list, e) do
@@ -47,31 +43,23 @@ defmodule Day08 do
     end)
   end
 
-  defp visible?(e, x, y, l, array) do
+  defp visible?(x, y, l, array) do
     case {x, y} do
-      {0, y} ->
+      {x, _y} when x in [0, l] ->
         true
 
-      {x, 0} ->
-        true
-
-      {x, ^l} ->
-        true
-
-      {^l, y} ->
+      {_x, y} when y in [0, l] ->
         true
 
       _ ->
-        {up, down, right, left} = non_edge(e, x, y, l, array)
+        e = array |> Enum.at(x) |> Enum.at(y)
 
-        Enum.all?(up, fn ne -> e > ne end) ||
-          Enum.all?(down, fn ne -> e > ne end) ||
-          Enum.all?(right, fn ne -> e > ne end) ||
-          Enum.all?(left, fn ne -> e > ne end)
+        neighbours_one(x, y, l, array)
+        |> Enum.any?(fn list -> Enum.all?(list, fn ne -> e > ne end) == true end)
     end
   end
 
-  defp neighbours(e, x, y, l, array) do
+  defp neighbours_two(x, y, l, array) do
     up =
       if x == 0 do
         []
@@ -94,10 +82,10 @@ defmodule Day08 do
     right = Enum.at(array, x) |> Enum.slice(y + 1, l)
     left = Enum.at(array, x) |> Enum.slice(0, y) |> Enum.reverse()
 
-    {up, down, right, left}
+    [up, down, right, left]
   end
 
-  defp non_edge(e, x, y, l, array) do
+  defp neighbours_one(x, y, l, array) do
     up =
       for i <- Range.new(0, x - 1) do
         Enum.at(array, i) |> Enum.at(y)
@@ -111,7 +99,7 @@ defmodule Day08 do
     right = Enum.at(array, x) |> Enum.slice(y + 1, l - 1)
     left = Enum.at(array, x) |> Enum.slice(0, y)
 
-    {up, down, right, left}
+    [up, down, right, left]
   end
 
   defp parse(input) do
