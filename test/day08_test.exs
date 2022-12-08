@@ -8,7 +8,7 @@ defmodule Day08Test do
 
   test "Part 1 - Challenge" do
     input = File.read!("./test/input/day08_input.txt")
-    assert Day08.part_one(input) == 1690
+    assert Day08.part_one(input) == 1829
   end
 
   #
