@@ -6,6 +6,33 @@ defmodule Day10 do
     |> Enum.sum()
   end
 
+  def part_two(input) do
+    x = 1
+    cycle = 1
+
+    {_x, _c, map} =
+      input
+      |> parse
+      |> Enum.reduce({x, cycle, %{}}, fn instr, acc -> run(instr, acc) end)
+
+    map
+    |> Map.to_list()
+    |> Enum.sort_by(fn {c, _x} -> c end)
+    |> Enum.drop(-1)
+    |> Enum.map(fn {c, x} -> crt(c - 1, x) end)
+    |> Enum.chunk_every(40)
+    |> Enum.join("\n")
+    |> then(&(&1 <> "\n"))
+  end
+
+  defp crt(idx, x) do
+    if abs(x - rem(idx, 40)) <= 1 do
+      "#"
+    else
+      "."
+    end
+  end
+
   def cycle_values(input) do
     x = 1
     cycle = 1
@@ -33,7 +60,7 @@ defmodule Day10 do
           a = Map.put(a, cycle, x)
           cycle = cycle + 1
 
-          x = x + elem(instruction, 2)
+          x = x + elem(instruction, 1)
           {x, cycle, a}
 
         :noop ->
@@ -52,10 +79,10 @@ defmodule Day10 do
   end
 
   defp cmd(<<"addx ", num::binary>>) do
-    {:add, 2, String.to_integer(num)}
+    {:add, String.to_integer(num)}
   end
 
   defp cmd("noop") do
-    {:noop, 1, 0}
+    {:noop, 0}
   end
 end

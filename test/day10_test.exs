@@ -24,14 +24,33 @@ defmodule Day10Test do
     assert Day10.part_one(input) == 13440
   end
 
-  #
-  #  test "Part 2 - Sample Input" do
-  #    input = File.read!("./test/input/day10_sample.txt")
-  #    assert Day10.part_two(input) == 8
-  #  end
-  #
-  #  test "Part 2 - Challenge" do
-  #    input = File.read!("./test/input/day10_input.txt")
-  #    assert Day10.part_two(input) == 291_840
-  #  end
+  test "Part 2 - Sample Input" do
+    input = File.read!("./test/input/day10_sample.txt")
+
+    expected = """
+    ##..##..##..##..##..##..##..##..##..##..
+    ###...###...###...###...###...###...###.
+    ####....####....####....####....####....
+    #####.....#####.....#####.....#####.....
+    ######......######......######......####
+    #######.......#######.......#######.....
+    """
+
+    assert Day10.part_two(input) == expected
+  end
+
+  test "Part 2 - Challenge" do
+    input = File.read!("./test/input/day10_input.txt")
+
+    expected = """
+    ###..###..####..##..###...##..####..##..
+    #..#.#..#....#.#..#.#..#.#..#....#.#..#.
+    #..#.###....#..#....#..#.#..#...#..#..#.
+    ###..#..#..#...#.##.###..####..#...####.
+    #....#..#.#....#..#.#.#..#..#.#....#..#.
+    #....###..####..###.#..#.#..#.####.#..#.
+    """
+
+    assert Day10.part_two(input) == expected
+  end
 end
