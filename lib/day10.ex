@@ -1,23 +1,12 @@
 defmodule Day10 do
   def part_one(input) do
-    input
-    |> cycle_values
-    |> Enum.map(fn {_i, v} -> v end)
-    |> Enum.sum()
+    input |> cycle_values |> Enum.map(fn {_i, v} -> v end) |> Enum.sum()
   end
 
   def part_two(input) do
-    x = 1
-    cycle = 1
-
-    {_x, _c, map} =
-      input
-      |> parse
-      |> Enum.reduce({x, cycle, %{}}, fn instr, acc -> run(instr, acc) end)
-
-    map
-    |> Map.to_list()
-    |> Enum.sort_by(fn {c, _x} -> c end)
+    input
+    |> parse
+    |> run_instructions
     |> Enum.drop(-1)
     |> Enum.map(fn {c, x} -> crt(c - 1, x) end)
     |> Enum.chunk_every(40)
@@ -25,51 +14,41 @@ defmodule Day10 do
     |> then(&(&1 <> "\n"))
   end
 
-  defp crt(idx, x) do
-    if abs(x - rem(idx, 40)) <= 1 do
-      "#"
-    else
-      "."
+  def cycle_values(input) do
+    input
+    |> parse
+    |> run_instructions
+    |> Enum.drop(19)
+    |> Enum.take_every(40)
+    |> Enum.map(fn {c, x} -> {c, c * x} end)
+  end
+
+  defp run_instructions(parsed) do
+    {_c, map} =
+      parsed
+      |> Enum.reduce({1, %{1 => 1}}, fn instr, acc -> run(instr, acc) end)
+
+    map |> Map.to_list() |> Enum.sort_by(fn {c, _v} -> c end)
+  end
+
+  defp run(instruction, {cycle, a}) do
+    x = Map.get(a, cycle)
+    cycle = cycle + 1
+
+    case elem(instruction, 0) do
+      :add ->
+        a = Map.put(a, cycle, x)
+        cycle = cycle + 1
+        x = x + elem(instruction, 1)
+        {cycle, Map.put(a, cycle, x)}
+
+      :noop ->
+        {cycle, Map.put(a, cycle, x)}
     end
   end
 
-  def cycle_values(input) do
-    x = 1
-    cycle = 1
-
-    {_x, _c, map} =
-      input
-      |> parse
-      |> Enum.reduce({x, cycle, %{}}, fn instr, acc -> run(instr, acc) end)
-
-    map
-    |> Map.to_list()
-    |> Enum.map(fn {c, x} -> {c, c * x} end)
-    |> Enum.sort_by(fn {c, _v} -> c end)
-    |> Enum.drop(19)
-    |> Enum.take_every(40)
-  end
-
-  defp run(instruction, {x, cycle, a}) do
-    {x, cycle, a} =
-      case elem(instruction, 0) do
-        :add ->
-          a = Map.put(a, cycle, x)
-          cycle = cycle + 1
-
-          a = Map.put(a, cycle, x)
-          cycle = cycle + 1
-
-          x = x + elem(instruction, 1)
-          {x, cycle, a}
-
-        :noop ->
-          a = Map.put(a, cycle, x)
-          cycle = cycle + 1
-          {x, cycle, a}
-      end
-
-    {x, cycle, Map.put(a, cycle, x)}
+  defp crt(idx, x) do
+    if abs(x - rem(idx, 40)) <= 1, do: "#", else: "."
   end
 
   defp parse(input) do
