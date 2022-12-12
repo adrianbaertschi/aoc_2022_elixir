@@ -15,21 +15,6 @@ defmodule Day09 do
     {visited, h, t} = Enum.reduce(commands, grid, fn c, acc -> move(acc, c) end)
     visited |> MapSet.size()
   end
-  
-  def part_two(input) do
-    s = MapSet.new([[4, 0]])
-    h = [4, 0]
-    t = [4, 0]
-
-    IO.puts("== Initial State ==\n")
-
-    grid = {s, h, t}
-    print_grid(grid)
-
-    commands = parse(input)
-    {visited, h, t} = Enum.reduce(commands, grid, fn c, acc -> move(acc, c) end)
-    visited |> MapSet.size()
-  end
 
   defp move(grid, {direction, count}) do
     IO.puts("== #{direction} #{count} ==")
@@ -72,9 +57,7 @@ defmodule Day09 do
 
   defp move_tail(t, {x_diff, y_diff}) do
     [x, y] = t
-    r = [x + sign(x_diff), y + sign(y_diff)]
-    #    IO.inspect(binding())
-    r
+    [x + sign(x_diff), y + sign(y_diff)]
   end
 
   defp sign(number), do: if(number > 0, do: 1, else: if(number < 0, do: -1, else: 0))
